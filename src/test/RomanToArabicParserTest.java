@@ -16,7 +16,7 @@ class RomanToArabicParserTest {
     }
 
     @Test
-    void itShouldParseRomanToArabic() {
+    void itShouldParseRomanToArabic() throws Exception {
         assertEquals(parser.toArabic("XL"), 40);
         assertEquals(parser.toArabic("XLII"), 42);
         assertEquals(parser.toArabic("XIX"), 19);
@@ -28,15 +28,15 @@ class RomanToArabicParserTest {
     @Test
     void itShouldThrowIfProvidedDataIsNotARomanNumeral() {
         Exception exception = assertThrows(Exception.class, () -> parser.toArabic("TEST"));
-        assertEquals("/ invalid numeral", exception.getMessage());
+        assertEquals("invalid numeral", exception.getMessage());
     }
 
     @Test
     void itShouldThrowIfProvidedDataIsNotAValidRomanNumeral() {
         Exception exception = assertThrows(Exception.class, () -> parser.toArabic("XXXX"));
-        assertEquals("/ invalid numeral", exception.getMessage());
+        assertEquals("invalid numeral", exception.getMessage());
 
         exception = assertThrows(Exception.class, () -> parser.toArabic("MDMD"));
-        assertEquals("/ invalid numeral", exception.getMessage());
+        assertEquals("invalid numeral", exception.getMessage());
     }
 }
