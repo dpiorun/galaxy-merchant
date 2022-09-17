@@ -5,10 +5,10 @@ import java.util.Map;
 
 import static java.util.regex.Pattern.matches;
 
-public class RomanToArabicParser {
+public class TerrestrialParser {
     private Map<Character, Integer> numbersMap;
 
-    public RomanToArabicParser() {
+    public TerrestrialParser() {
         numbersMap = new HashMap<>();
         numbersMap.put('I', 1);
         numbersMap.put('V', 5);
@@ -25,7 +25,7 @@ public class RomanToArabicParser {
     }
 
     public int toArabic(String romanNumeral) throws Exception {
-        if (!validateRomanNumeral(romanNumeral)) throw new Exception("invalid numeral");
+        if (!validateRomanNumeral(romanNumeral)) throw new Exception("Invalid numeral");
 
         int result = 0;
         for (int i = 0; i < romanNumeral.length(); i++) {
