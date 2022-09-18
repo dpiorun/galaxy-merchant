@@ -11,8 +11,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -20,13 +22,15 @@ class NotesScrapperTest {
     private final PrintStream standardOut = System.out;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private IntergalacticalParser parser;
+    private HashMap<String, Product> products;
     private NotesScrapper scrapper;
 
     @BeforeEach
     public void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
         parser = spy(new IntergalacticalParser());
-        scrapper = new NotesScrapper(parser);
+        products = new HashMap();
+        scrapper = new NotesScrapper(parser, products);
     }
 
     private void setupParser() {
@@ -34,6 +38,11 @@ class NotesScrapperTest {
         parser.set("prok", 'V');
         parser.set("pish", 'X');
         parser.set("tegj", 'L');
+    }
+
+    private void setupProduct() {
+        products.put("Test", new Product("Test"));
+        products.get("Test").setUnitPrice(10);
     }
 
     @AfterEach
@@ -65,20 +74,17 @@ class NotesScrapperTest {
         note = note.trim();
         String[] values = note.split("\\s+is\\s+");
         String[] firstPart = values[0].split("\\s+");
-        String[] secondPart = values[1].split("\\s+");
         String productName = firstPart[firstPart.length - 1];
-        String price = secondPart[0];
         setupParser();
-        Product productMock = spy(new Product(productName));
-
         scrapper.scrap(note);
 
-        verify(productMock).setUnitPrice(Integer.parseInt(price));
+        assertTrue(products.containsKey(productName));
     }
 
     @ParameterizedTest
     @CsvSource({
-            "how much is pish tegj glob glob, pish tegj glob glob is 42",
+            "how much is prok ?,                        prok is 5",
+            "how  much  is  pish  tegj  glob glob?,     pish tegj glob glob is 42",
     })
     void itTranslatesIntergalacticalNumerals(String note, String answer) {
         setupParser();
@@ -89,12 +95,12 @@ class NotesScrapperTest {
 
     @ParameterizedTest
     @CsvSource({
-            "how many Credits is glob prok Silver ?,    glob prok Silver is 68 Credits",
-            "  how many Credits is glob prok Gold ?,    glob prok Gold is 57800 Credits",
-            "how many Credits is glob prok Iron ?,      glob prok Iron is 782 Credits",
+            "how many Credits is glob prok Test ?,    glob prok Test is 40 Credits",
+            "  how  many  Credits  is  prok  Test?,   prok Test is 50 Credits",
     })
     void itCalculatesThePriceOfAQuery(String note, String answer) {
         setupParser();
+        setupProduct();
 
         scrapper.scrap(note);
         assertEquals(answer, outputStreamCaptor.toString().trim());
