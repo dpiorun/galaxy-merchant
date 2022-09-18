@@ -22,12 +22,18 @@ class NotesScrapperTest {
     private IntergalacticalParser parser;
     private NotesScrapper scrapper;
 
-
     @BeforeEach
     public void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
-        parser = new IntergalacticalParser();
+        parser = spy(new IntergalacticalParser());
         scrapper = new NotesScrapper(parser);
+    }
+
+    private void setupParser() {
+        parser.set("glob", 'I');
+        parser.set("prok", 'V');
+        parser.set("pish", 'X');
+        parser.set("tegj", 'L');
     }
 
     @AfterEach
@@ -44,10 +50,9 @@ class NotesScrapperTest {
     })
     void itAddsTranslationsToIntergalacticalParser(String note) {
         note = note.trim();
-        IntergalacticalParser spy = spy(parser);
         scrapper.scrap(note);
         String[] values = note.split("\\s+is\\s+");
-        verify(spy).set(values[0], values[1].charAt(0));
+        verify(parser).set(values[0], values[1].charAt(0));
     }
 
     @ParameterizedTest
@@ -63,8 +68,11 @@ class NotesScrapperTest {
         String[] secondPart = values[1].split("\\s+");
         String productName = firstPart[firstPart.length - 1];
         String price = secondPart[0];
+        setupParser();
         Product productMock = spy(new Product(productName));
+
         scrapper.scrap(note);
+
         verify(productMock).setUnitPrice(Integer.parseInt(price));
     }
 
@@ -73,6 +81,8 @@ class NotesScrapperTest {
             "how much is pish tegj glob glob, pish tegj glob glob is 42",
     })
     void itTranslatesIntergalacticalNumerals(String note, String answer) {
+        setupParser();
+
         scrapper.scrap(note);
         assertEquals(answer, outputStreamCaptor.toString().trim());
     }
@@ -84,6 +94,8 @@ class NotesScrapperTest {
             "how many Credits is glob prok Iron ?,      glob prok Iron is 782 Credits",
     })
     void itCalculatesThePriceOfAQuery(String note, String answer) {
+        setupParser();
+
         scrapper.scrap(note);
         assertEquals(answer, outputStreamCaptor.toString().trim());
     }
@@ -93,6 +105,8 @@ class NotesScrapperTest {
             "how much wood could a woodchuck chuck if a woodchuck could chuck wood ?"
     })
     void itAdmitsItsIgnoranceWhenApplicable(String note) {
+        setupParser();
+
         scrapper.scrap(note);
         assertEquals("I have no idea what you are talking about", outputStreamCaptor.toString().trim());
     }
