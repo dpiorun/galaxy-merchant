@@ -43,10 +43,10 @@ public class NotesScrapper {
         if (matcher.matches()) {
             String name = matcher.group("product");
             String numeral = matcher.group("numeral");
-            Integer price = Integer.parseInt(matcher.group("price"));
+            double price = Double.parseDouble(matcher.group("price"));
 
             try {
-                Integer unitPrice = price / parser.toTerrestrial(numeral);
+                double unitPrice = price / parser.toTerrestrial(numeral);
                 Product product = new Product(name);
                 product.setUnitPrice(unitPrice);
                 products.put(name, product);
@@ -83,9 +83,14 @@ public class NotesScrapper {
 
                 String productName = matcher.group("product");
                 Product queriedProduct = products.get(productName);
-                int price = queriedProduct.getUnitPrice() * quantity;
+                Double price = queriedProduct.getUnitPrice() * quantity;
 
-                System.out.println(numeral + " " + productName + " is " + price + " Credits");
+                System.out.printf(
+                        "%s %s is %s Credits%n",
+                        numeral,
+                        productName,
+                        Utils.formatPrice(price)
+                );
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
