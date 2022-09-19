@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class IntergalacticalParser {
-    private Map<String, Character> translationsMap;
+    private final Map<String, Character> translationsMap;
 
     public IntergalacticalParser() {
         translationsMap = new HashMap<>();
@@ -15,18 +15,20 @@ public class IntergalacticalParser {
     }
 
     public int toTerrestrial(String intergalacticalNumeral) throws Exception {
-        if (translationsMap.size() == 0) throw new Exception("Parser not set");
+        if (translationsMap.size() == 0)
+            throw new Exception("Parser not set");
 
         String[] numerals = intergalacticalNumeral.split("\\s+");
 
         TerrestrialParser terrestrialParser = new TerrestrialParser();
 
-        if (numerals.length == 1 && numerals[0] == "") return terrestrialParser.toArabic(numerals[0]);
+        if (numerals.length == 1 && numerals[0].equals(""))
+            return terrestrialParser.toArabic(numerals[0]);
 
-        String translated = "";
+        StringBuilder translated = new StringBuilder();
         for (String numeral : numerals)
-            translated += translationsMap.get(numeral);
+            translated.append(translationsMap.get(numeral));
 
-        return terrestrialParser.toArabic(translated);
+        return terrestrialParser.toArabic(translated.toString());
     }
 }

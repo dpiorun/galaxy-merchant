@@ -33,7 +33,6 @@ class NotesScannerTest {
 
     @AfterEach
     void tearDown() {
-
         System.setOut(standardOut);
     }
 
