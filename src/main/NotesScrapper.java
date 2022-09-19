@@ -5,9 +5,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NotesScrapper {
-    private IntergalacticalParser parser;
-    private HashMap<String, Product> products;
-    private String ultimateStatement = "I have no idea what you are talking about";
+    private final IntergalacticalParser parser;
+    private final HashMap<String, Product> products;
+    private final String ultimateStatement = "I have no idea what you are talking about";
     private String note;
 
     public NotesScrapper(IntergalacticalParser parser, HashMap<String, Product> productStore) {

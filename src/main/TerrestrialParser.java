@@ -6,7 +6,7 @@ import java.util.Map;
 import static java.util.regex.Pattern.matches;
 
 public class TerrestrialParser {
-    private Map<Character, Integer> numbersMap;
+    private final Map<Character, Integer> numbersMap;
 
     public TerrestrialParser() {
         numbersMap = new HashMap<>();

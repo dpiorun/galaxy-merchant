@@ -29,7 +29,7 @@ class NotesScrapperTest {
     public void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
         parser = spy(new IntergalacticalParser());
-        products = new HashMap();
+        products = new HashMap<>();
         scrapper = new NotesScrapper(parser, products);
     }
 
