@@ -2,7 +2,7 @@ package main;
 
 public class Product {
     String name;
-    Integer unitPrice;
+    Double unitPrice;
 
     public Product(String name) {
         this.name = name;
@@ -12,11 +12,11 @@ public class Product {
         return this.name;
     }
 
-    public Integer getUnitPrice() {
+    public Double getUnitPrice() {
         return this.unitPrice;
     }
 
-    public void setUnitPrice(int price) {
+    public void setUnitPrice(double price) {
         this.unitPrice = price;
     }
 }

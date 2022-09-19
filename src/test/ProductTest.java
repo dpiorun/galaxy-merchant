@@ -22,8 +22,8 @@ class ProductTest {
 
     @Test
     void itIsPossibleToAddUnitPriceForTheProduct() {
-        product.setUnitPrice(10);
-        assertEquals(product.getUnitPrice(), 10);
+        product.setUnitPrice(1237875192.0);
+        assertEquals(product.getUnitPrice(), 1237875192.0);
     }
 
     @Test

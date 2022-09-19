@@ -42,7 +42,7 @@ class NotesScrapperTest {
 
     private void setupProduct() {
         products.put("Test", new Product("Test"));
-        products.get("Test").setUnitPrice(10);
+        products.get("Test").setUnitPrice(10.50);
     }
 
     @AfterEach
@@ -95,8 +95,8 @@ class NotesScrapperTest {
 
     @ParameterizedTest
     @CsvSource({
-            "how many Credits is glob prok Test ?,    glob prok Test is 40 Credits",
-            "  how  many  Credits  is  prok  Test?,   prok Test is 50 Credits",
+            "how many Credits is glob prok Test ?,    glob prok Test is 42 Credits",
+            "  how  many  Credits  is  prok  Test?,   prok Test is 52.5 Credits",
     })
     void itCalculatesThePriceOfAQuery(String note, String answer) {
         setupParser();
