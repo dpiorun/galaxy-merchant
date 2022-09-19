@@ -23,6 +23,9 @@ public class NotesScanner {
 
         while (in.hasNextLine()) {
             String userInput = in.nextLine();
+            if (userInput.equals("exit"))
+                System.exit(0);
+
             Pattern pattern = Pattern.compile("(^f:)(?<filePath>.+)");
             Matcher matcher = pattern.matcher(userInput);
             if (matcher.matches()) {
