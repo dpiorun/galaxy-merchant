@@ -1,6 +1,5 @@
-package test;
+package galaxy;
 
-import main.Utils;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;

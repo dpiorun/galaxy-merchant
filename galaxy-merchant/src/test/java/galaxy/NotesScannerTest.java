@@ -1,6 +1,5 @@
-package test;
+package galaxy;
 
-import main.NotesScanner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,7 @@ class NotesScannerTest {
     }
 
     private Path getTestFilePath(String name) {
-        return FileSystems.getDefault().getPath("src", "test", name);
+        return FileSystems.getDefault().getPath("src", "test", "resources", name);
     }
 
     @AfterEach

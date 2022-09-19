@@ -1,6 +1,5 @@
-package test;
+package galaxy;
 
-import main.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
