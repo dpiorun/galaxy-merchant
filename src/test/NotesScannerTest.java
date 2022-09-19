@@ -1,32 +1,30 @@
 package test;
 
+import main.NotesScanner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static com.github.stefanbirkner.systemlambda.SystemLambda.withTextFromSystemIn;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class MainTest {
+class NotesScannerTest {
     private final PrintStream standardOut = System.out;
-    private final InputStream standardIn = System.in;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+    private final String ultimateStatement = "I have no idea what you are talking about";
+    private final String initialMessage = "Please provide a path to a file, by typing 'f:{path}' or provide a note in the console:";
 
-    private String ultimateStatement = "I have no idea what you are talking about";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
-    }
-
-    private void provideUserInput(String data) {
-        ByteArrayInputStream testIn = new ByteArrayInputStream(data.getBytes());
-        System.setIn(testIn);
     }
 
     private Path getTestFilePath(String name) {
@@ -34,40 +32,76 @@ class MainTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
+
         System.setOut(standardOut);
-        System.setIn(standardIn);
     }
 
     @Test
-    void itPromptUserForFileSourceOrNotes() {
-        String initialMessage = "Please provide a path to a file, by typing 'f:{path}' or provide a note in the console:";
-        assertEquals(initialMessage, outputStreamCaptor.toString().trim());
+    void itPromptUserForFileSourceOrNotes() throws Exception {
+        withTextFromSystemIn().execute(() -> {
+            NotesScanner scanner = new NotesScanner();
+            scanner.scan();
+            assertEquals(initialMessage, outputStreamCaptor.toString().trim());
+        });
     }
 
     @Test
-    void itLoadsFileAndPassLineByLineToNotesScrapper() throws IOException {
+    void itLoadsFileAndPassLineByLineToNotesScrapper() throws Exception {
         String userInput = "f:" + getTestFilePath("test-input.txt");
-        provideUserInput(userInput);
 
-        String expectedOutput = Files.readString(getTestFilePath("test-output.txt"), StandardCharsets.UTF_8);
-        assertEquals(expectedOutput, outputStreamCaptor.toString().trim());
+        withTextFromSystemIn(userInput).execute(() -> {
+            NotesScanner scanner = new NotesScanner();
+            scanner.scan();
+            String expectedOutput = Files.readString(getTestFilePath("test-output.txt"), StandardCharsets.UTF_8);
+            assertEquals(
+                    String.format(
+                            "%s%s%s",
+                            initialMessage,
+                            System.lineSeparator(),
+                            expectedOutput
+                    ),
+                    outputStreamCaptor.toString().trim()
+            );
+        });
     }
 
     @Test
-    void itTakesUsersInputAndPassToNotesScrapper() {
-        provideUserInput("test");
-        assertEquals(ultimateStatement, outputStreamCaptor.toString().trim());
-
-        provideUserInput("second line");
-        assertEquals(ultimateStatement, outputStreamCaptor.toString().trim());
+    void itTakesUsersInputAndPassToNotesScrapper() throws Exception {
+        withTextFromSystemIn("test", "second line").execute(() -> {
+            NotesScanner scanner = new NotesScanner();
+            scanner.scan();
+            assertEquals(
+                    String.format(
+                            "%s%s%s%s%s",
+                            initialMessage,
+                            System.lineSeparator(),
+                            ultimateStatement,
+                            System.lineSeparator(),
+                            ultimateStatement
+                    ),
+                    outputStreamCaptor.toString().trim()
+            );
+        });
     }
 
     @Test
-    void itWaitsForMoreQuestionsAfterLoadingAFile() {
+    void itWaitsForMoreQuestionsAfterLoadingAFile() throws Exception {
         String filePath = "f:" + getTestFilePath("test-input.txt");
-        provideUserInput(filePath);
-        provideUserInput("test");
-        assertEquals(ultimateStatement, outputStreamCaptor.toString().trim());
+        withTextFromSystemIn(filePath, "test").execute(() -> {
+            NotesScanner scanner = new NotesScanner();
+            scanner.scan();
+            String expectedFileOutput = Files.readString(getTestFilePath("test-output.txt"), StandardCharsets.UTF_8);
+            assertEquals(
+                    String.format(
+                            "%s%s%s%s%s",
+                            initialMessage,
+                            System.lineSeparator(),
+                            expectedFileOutput,
+                            System.lineSeparator(),
+                            ultimateStatement
+                    ),
+                    outputStreamCaptor.toString().trim());
+        });
     }
 }
