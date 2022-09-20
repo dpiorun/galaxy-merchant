@@ -3,16 +3,15 @@
 See [CHALLENGE](CHALLENGE.md)
 
 ## How to build
-First, compile the code and create the `.jar` file.  
-In the project folder, in the terminal run:  
-```shell
+First, compile the code and create the `.jar` file. To do that, in the project folder, in the terminal run:  
+```console
 javac -d galaxy-merchant/target/classes galaxy-merchant/src/main/java/galaxy/*.java 
 jar cvfm galaxy-merchant.jar Manifest.MF -C galaxy-merchant/target/classes/ .   
 ```
 
 ## How to run
 In the terminal open the directory, where you put the `.jar` file and run: 
-```shell
+```console
 java -jar galaxy-merchant.jar
 ```
 
@@ -26,11 +25,11 @@ The program:
 
 ## Usage
 First, the program expects you to provide painstakingly collected notes.  
-```shell
+```console
 Please provide a path to a file, by typing 'f:{path}' or provide a note in the console:
 ```  
 You can provide a file with notes and questions. The program will inform you if the file doesn't exist. It accepts a relative path.  
-```shell
+```console
 f:/computer/wrong_path_to_the_file/test-input.txt  
 /computer/wrong_path_to_the_file/test-input.txt  (No such file or directory)  
 f:test-input.txt  
@@ -41,26 +40,26 @@ glob prok Iron is 782 Credits
 I have no idea what you are talking about  
 ```  
 The program will wait for the next questions until you type `exit`.  
-```shell
+```console
 how much is pish?  
 pish is 10  
 ```  
-```shell
+```console
 how many Credits is pish Silver?
 pish Silver is 170 Credits
 ```  
 The program doesn't answer accurately for every question.  
-```shell
+```console
 how do you do?  
 I have no idea what you are talking about  
 ```  
 But it informs if it recognizes some misstatements.  
-```shell
+```console
 how much is glob glob glob glob?  
 Invalid numeral  
 ```
 The program is case sensitive. It's very annoying and should definitely be improved in version 1.1:  
-```shell
+```console
 How much is pish?  
 I have no idea what you are talking about  
 ```
